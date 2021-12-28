@@ -11,7 +11,7 @@ using Encoder = SevenZip.Compression.LZMA.Encoder;
 
 namespace NSTLib.igStructures
 {
-    // We can divide the IGA to about 3 parts:
+    // We can divide the IGA to about 4 parts:
     // 1 - Header.
     // 2 - Table of Contents (Divided to 3 parts: File IDs (Hashes), File Info, File Blocks (Compression stuff)).
     // 3 - File Data.
@@ -64,7 +64,7 @@ namespace NSTLib.igStructures
         [StructLayout(LayoutKind.Sequential, Pack = 1)]
         public struct NameEntry
         {
-            public string _path;
+            public string _buildPath;
             public string _name;
         }
 
@@ -123,7 +123,7 @@ namespace NSTLib.igStructures
                             for(int i = 0; i < availableNameEntries[path].Length; i++)
                             {
                                 nameTableReader.BaseStream.Position = nameOffsets[i];
-                                availableNameEntries[path][i]._path = nameTableReader.ReadNullTerminatedString();
+                                availableNameEntries[path][i]._buildPath = nameTableReader.ReadNullTerminatedString();
                                 availableNameEntries[path][i]._name = nameTableReader.ReadNullTerminatedString();
                             }
 
@@ -155,15 +155,14 @@ namespace NSTLib.igStructures
                 FileInfo[] info;
                 using (ExtendedBinaryReader tocReader = new ExtendedBinaryReader(new MemoryStream(reader.ReadBytes(archive._header._tocSize)))) // TOC Buffer
                 {
-                    // Read hashes and File Entries
+                    // Read hashes and File Info
                     hashes = tocReader.ReadArray<uint>(fileCount);
                     info = tocReader.ReadArrayUnsafe<FileInfo>(fileCount);
+
+                    // Read file blocks
                     archive._mediumFileBlocks = tocReader.ReadArray<ushort>(archive._header._numMediumFileBlocks);
                     archive._smallFileBlocks = tocReader.ReadArray<byte>(archive._header._numSmallFileBlocks);
-                    // Read file blocks
                 }
-
-                // To do: Parse all TOC correctly
 
                 #endregion
 
@@ -181,14 +180,14 @@ namespace NSTLib.igStructures
                     for(int i = 0; i < fileCount; i++)
                     {
                         nameTableReader.BaseStream.Position = nameOffsets[i];
-                        nameEntries[i]._path = nameTableReader.ReadNullTerminatedString();
+                        nameEntries[i]._buildPath = nameTableReader.ReadNullTerminatedString();
                         nameEntries[i]._name = nameTableReader.ReadNullTerminatedString();
                     }
                 }
 
                 #endregion
 
-                #region Assemble
+                #region Finalize
 
                 archive._entries = new FileEntry[fileCount];
 
@@ -206,24 +205,16 @@ namespace NSTLib.igStructures
             return archive;
         }
 
-        public Stream GetFileData(string name)
-        {
-            return FindFileByName(name, out var file) ? GetFileData(file.Value) : null;
-        }
-
-        public Stream GetFileData(uint hash)
-        {
-            return FindFileByHash(hash, out var file) ? GetFileData(file.Value) : null;
-        }
-
+        public Stream GetFileData(string name) => FindFile(name, out var file) ? GetFileData(file.Value) : null;
+        public Stream GetFileData(uint hash) => FindFile(hash, out var file) ? GetFileData(file.Value) : null;
         public Stream GetFileData(FileEntry entry)
         {
             MemoryStream stream = new MemoryStream();
-            WriteFileDataToStream(entry, stream);
+            WriteToStream(entry, stream);
             return stream;
         }
 
-        public void WriteFileDataToStream(FileEntry entry, Stream stream)
+        public void WriteToStream(FileEntry entry, Stream stream)
         {
             switch(entry._info._compressionFlag)
             {
@@ -282,7 +273,7 @@ namespace NSTLib.igStructures
 
         #region Methods
 
-        public bool FindFileByName(string name, out FileEntry? file)
+        public bool FindFile(string name, out FileEntry? file)
         {
             for (int i = 0; i < _entries.Length; i++)
             {
@@ -296,7 +287,7 @@ namespace NSTLib.igStructures
             return false;
         }
 
-        public bool FindFileByHash(uint Hash, out FileEntry? file)
+        public bool FindFile(uint Hash, out FileEntry? file)
         {
             for (int i = 0; i < _entries.Length; i++)
             {
@@ -321,12 +312,13 @@ namespace NSTLib.igStructures
 
         #region Fields
 
+        private ArchiveHeader _header;
+
         public readonly Stream _stream;
 
-        private ArchiveHeader _header;
-        public FileEntry[] _entries;
         public ushort[] _mediumFileBlocks;
         public byte[] _smallFileBlocks;
+        public FileEntry[] _entries;
 
         #endregion
     }

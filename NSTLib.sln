@@ -5,7 +5,7 @@ VisualStudioVersion = 17.1.31903.286
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NSTLib", "NSTLib\NSTLib.csproj", "{F1D223DB-3414-446A-B664-C582FB4CCFE9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "7zip.NET6", "7zip.NET6\7zip.NET6.csproj", "{0BD3A2BB-8BBC-43BD-A6BA-5686F0809BDE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "7zip.NET6", "7zip.NET6\7zip.NET6.csproj", "{0BD3A2BB-8BBC-43BD-A6BA-5686F0809BDE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
