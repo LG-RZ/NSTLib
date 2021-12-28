@@ -247,6 +247,8 @@ namespace NSTLib.igStructures
             }
         }
 
+        #region Decompression
+
         public void DecompressLZMABlock(int offset, int size, int index, int commandIndex, BinaryWriter writer, BinaryReader reader)
         {
             int BlockMask = size > 0x3F800 ? 0x8000 : 0x80;
@@ -268,6 +270,8 @@ namespace NSTLib.igStructures
                 decoder.Code(reader.BaseStream, writer.BaseStream, CompressedSize, Math.Min(0x8000, size - (0x8000 * index)), null);
             }
         }
+
+        #endregion
 
         #endregion
 
