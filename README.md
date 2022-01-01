@@ -1,6 +1,6 @@
 # NSTLib
 
-A C# library made for Crash Bandicoot: N. Sane Trilogy
+A C# library made for Crash Bandicoot: N. Sane Trilogy PC Version
 
 ## Credits
 * LG            - Developer of Lib
