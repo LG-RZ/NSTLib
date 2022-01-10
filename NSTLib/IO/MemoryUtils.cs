@@ -23,6 +23,19 @@ namespace NSTLib.IO
             }
         }
 
+        public static object ToStruct(object structure, byte[] data)
+        {
+            GCHandle gcHandle = GCHandle.Alloc(data, GCHandleType.Pinned);
+            try
+            {
+                return Marshal.PtrToStructure(gcHandle.AddrOfPinnedObject(), (Type)structure);
+            }
+            finally
+            {
+                gcHandle.Free();
+            }
+        }
+
         public static byte[] StructToBytes<T>(T structure) where T : struct
         {
             byte[] data = new byte[Marshal.SizeOf<T>()];

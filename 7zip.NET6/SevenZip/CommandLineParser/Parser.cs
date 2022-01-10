@@ -3,10 +3,8 @@ using System.Collections;
 
 namespace SevenZip.CommandLineParser
 {
-	// Token: 0x02000026 RID: 38
 	public class Parser
 	{
-		// Token: 0x060000EF RID: 239 RVA: 0x000092F4 File Offset: 0x000074F4
 		public Parser(int numSwitches)
 		{
 			this._switches = new SwitchResult[numSwitches];
@@ -16,7 +14,6 @@ namespace SevenZip.CommandLineParser
 			}
 		}
 
-		// Token: 0x060000F0 RID: 240 RVA: 0x00009338 File Offset: 0x00007538
 		private bool ParseString(string srcString, SwitchForm[] switchForms)
 		{
 			int length = srcString.Length;
@@ -137,7 +134,6 @@ namespace SevenZip.CommandLineParser
 			return true;
 		}
 
-		// Token: 0x060000F1 RID: 241 RVA: 0x00009578 File Offset: 0x00007778
 		public void ParseStrings(SwitchForm[] switchForms, string[] commandStrings)
 		{
 			int num = commandStrings.Length;
@@ -160,7 +156,6 @@ namespace SevenZip.CommandLineParser
 			}
 		}
 
-		// Token: 0x17000004 RID: 4
 		public SwitchResult this[int index]
 		{
 			get
@@ -169,7 +164,6 @@ namespace SevenZip.CommandLineParser
 			}
 		}
 
-		// Token: 0x060000F3 RID: 243 RVA: 0x000095E0 File Offset: 0x000077E0
 		public static int ParseCommand(CommandForm[] commandForms, string commandString, out string postString)
 		{
 			for (int i = 0; i < commandForms.Length; i++)
@@ -193,7 +187,6 @@ namespace SevenZip.CommandLineParser
 			return -1;
 		}
 
-		// Token: 0x060000F4 RID: 244 RVA: 0x00009644 File Offset: 0x00007844
 		private static bool ParseSubCharsCommand(int numForms, CommandSubCharsSet[] forms, string commandString, ArrayList indices)
 		{
 			indices.Clear();
@@ -230,28 +223,21 @@ namespace SevenZip.CommandLineParser
 			return num == commandString.Length;
 		}
 
-		// Token: 0x060000F5 RID: 245 RVA: 0x000096EC File Offset: 0x000078EC
 		private static bool IsItSwitchChar(char c)
 		{
 			return c == '-' || c == '/';
 		}
 
-		// Token: 0x04000118 RID: 280
 		public ArrayList NonSwitchStrings = new ArrayList();
 
-		// Token: 0x04000119 RID: 281
 		private SwitchResult[] _switches;
 
-		// Token: 0x0400011A RID: 282
 		private const char kSwitchID1 = '-';
 
-		// Token: 0x0400011B RID: 283
 		private const char kSwitchID2 = '/';
 
-		// Token: 0x0400011C RID: 284
 		private const char kSwitchMinus = '-';
 
-		// Token: 0x0400011D RID: 285
 		private const string kStopSwitchParsing = "--";
 	}
 }

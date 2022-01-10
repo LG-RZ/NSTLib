@@ -27,6 +27,13 @@ namespace NSTLib.IO
 
         #region Methods
 
+        #region Safe
+
+        public object ReadStruct(Type type)
+        {
+            return MemoryUtils.ToStruct(type, ReadBytes(Marshal.SizeOf(type)));
+        }
+
         public T ReadStruct<T>() where T : struct
         {
             return MemoryUtils.ToStruct<T>(ReadBytes(Marshal.SizeOf<T>()));
@@ -36,7 +43,7 @@ namespace NSTLib.IO
         {
             T[] data = new T[count];
 
-            if(typeof(T).IsPrimitive)
+            if (typeof(T).IsPrimitive)
             {
                 Buffer.BlockCopy(ReadBytes(count * Marshal.SizeOf<T>()), 0, data, 0, count * Marshal.SizeOf<T>());
             }
@@ -51,6 +58,19 @@ namespace NSTLib.IO
             return data;
         }
 
+        public string ReadNullTerminatedString()
+        {
+            string str = "";
+            char c;
+            while ((c = ReadChar()) != '\0')
+                str += c;
+            return str;
+        }
+
+        #endregion
+
+        #region Unsafe
+
         public unsafe T[] ReadArrayUnsafe<T>(int count) where T : unmanaged
         {
             var buffer = ReadBytes(count * sizeof(T));
@@ -63,13 +83,18 @@ namespace NSTLib.IO
             return result;
         }
 
-        public string ReadNullTerminatedString()
+        #endregion
+
+        #endregion
+
+        #region Properties
+
+        public long RelativePosition { get; set; } = 0;
+
+        public long Position
         {
-            string str = "";
-            char c;
-            while ((c = ReadChar()) != '\0')
-                str += c;
-            return str;
+            get => BaseStream.Position - RelativePosition;
+            set => BaseStream.Position = value + RelativePosition;
         }
 
         #endregion

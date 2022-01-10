@@ -3,10 +3,8 @@ using System.IO;
 
 namespace SevenZip.Compression.LZ
 {
-	// Token: 0x0200001B RID: 27
 	public class BinTree : InWindow, IMatchFinder, IInWindowStream
 	{
-		// Token: 0x0600008C RID: 140 RVA: 0x00005690 File Offset: 0x00003890
 		public void SetType(int numHashBytes)
 		{
 			this.HASH_ARRAY = (numHashBytes > 2);
@@ -22,19 +20,16 @@ namespace SevenZip.Compression.LZ
 			this.kFixHashSize = 0U;
 		}
 
-		// Token: 0x0600008D RID: 141 RVA: 0x000056DE File Offset: 0x000038DE
 		public new void SetStream(Stream stream)
 		{
 			base.SetStream(stream);
 		}
 
-		// Token: 0x0600008E RID: 142 RVA: 0x000056E7 File Offset: 0x000038E7
 		public new void ReleaseStream()
 		{
 			base.ReleaseStream();
 		}
 
-		// Token: 0x0600008F RID: 143 RVA: 0x000056F0 File Offset: 0x000038F0
 		public new void Init()
 		{
 			base.Init();
@@ -46,7 +41,6 @@ namespace SevenZip.Compression.LZ
 			base.ReduceOffsets(-1);
 		}
 
-		// Token: 0x06000090 RID: 144 RVA: 0x0000572C File Offset: 0x0000392C
 		public new void MovePos()
 		{
 			uint num = this._cyclicBufferPos + 1U;
@@ -62,25 +56,21 @@ namespace SevenZip.Compression.LZ
 			}
 		}
 
-		// Token: 0x06000091 RID: 145 RVA: 0x00005772 File Offset: 0x00003972
 		public new byte GetIndexByte(int index)
 		{
 			return base.GetIndexByte(index);
 		}
 
-		// Token: 0x06000092 RID: 146 RVA: 0x0000577B File Offset: 0x0000397B
 		public new uint GetMatchLen(int index, uint distance, uint limit)
 		{
 			return base.GetMatchLen(index, distance, limit);
 		}
 
-		// Token: 0x06000093 RID: 147 RVA: 0x00005786 File Offset: 0x00003986
 		public new uint GetNumAvailableBytes()
 		{
 			return base.GetNumAvailableBytes();
 		}
 
-		// Token: 0x06000094 RID: 148 RVA: 0x00005790 File Offset: 0x00003990
 		public void Create(uint historySize, uint keepAddBufferBefore, uint matchMaxLen, uint keepAddBufferAfter)
 		{
 			if (historySize > 2147483391U)
@@ -120,7 +110,6 @@ namespace SevenZip.Compression.LZ
 			}
 		}
 
-		// Token: 0x06000095 RID: 149 RVA: 0x00005878 File Offset: 0x00003A78
 		public uint GetMatches(uint[] distances)
 		{
 			uint num;
@@ -240,7 +229,6 @@ namespace SevenZip.Compression.LZ
 			return num2;
 		}
 
-		// Token: 0x06000096 RID: 150 RVA: 0x00005C60 File Offset: 0x00003E60
 		public void Skip(uint num)
 		{
 			for (;;)
@@ -329,7 +317,6 @@ namespace SevenZip.Compression.LZ
 			}
 		}
 
-		// Token: 0x06000097 RID: 151 RVA: 0x00005F14 File Offset: 0x00004114
 		private void NormalizeLinks(uint[] items, uint numItems, uint subValue)
 		{
 			for (uint num = 0U; num < numItems; num += 1U)
@@ -347,7 +334,6 @@ namespace SevenZip.Compression.LZ
 			}
 		}
 
-		// Token: 0x06000098 RID: 152 RVA: 0x00005F44 File Offset: 0x00004144
 		private void Normalize()
 		{
 			uint subValue = this._pos - this._cyclicBufferSize;
@@ -356,67 +342,47 @@ namespace SevenZip.Compression.LZ
 			base.ReduceOffsets((int)subValue);
 		}
 
-		// Token: 0x06000099 RID: 153 RVA: 0x00005F8E File Offset: 0x0000418E
 		public void SetCutValue(uint cutValue)
 		{
 			this._cutValue = cutValue;
 		}
 
-		// Token: 0x04000071 RID: 113
 		private uint _cyclicBufferPos;
 
-		// Token: 0x04000072 RID: 114
 		private uint _cyclicBufferSize;
 
-		// Token: 0x04000073 RID: 115
 		private uint _matchMaxLen;
 
-		// Token: 0x04000074 RID: 116
 		private uint[] _son;
 
-		// Token: 0x04000075 RID: 117
 		private uint[] _hash;
 
-		// Token: 0x04000076 RID: 118
 		private uint _cutValue = 255U;
 
-		// Token: 0x04000077 RID: 119
 		private uint _hashMask;
 
-		// Token: 0x04000078 RID: 120
 		private uint _hashSizeSum;
 
-		// Token: 0x04000079 RID: 121
 		private bool HASH_ARRAY = true;
 
-		// Token: 0x0400007A RID: 122
 		private const uint kHash2Size = 1024U;
 
-		// Token: 0x0400007B RID: 123
 		private const uint kHash3Size = 65536U;
 
-		// Token: 0x0400007C RID: 124
 		private const uint kBT2HashSize = 65536U;
 
-		// Token: 0x0400007D RID: 125
 		private const uint kStartMaxLen = 1U;
 
-		// Token: 0x0400007E RID: 126
 		private const uint kHash3Offset = 1024U;
 
-		// Token: 0x0400007F RID: 127
 		private const uint kEmptyHashValue = 0U;
 
-		// Token: 0x04000080 RID: 128
 		private const uint kMaxValForNormalize = 2147483647U;
 
-		// Token: 0x04000081 RID: 129
 		private uint kNumHashDirectBytes;
 
-		// Token: 0x04000082 RID: 130
 		private uint kMinMatchCheck = 4U;
 
-		// Token: 0x04000083 RID: 131
 		private uint kFixHashSize = 66560U;
 	}
 }

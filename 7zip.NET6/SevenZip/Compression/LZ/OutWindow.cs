@@ -3,10 +3,8 @@ using System.IO;
 
 namespace SevenZip.Compression.LZ
 {
-	// Token: 0x0200001D RID: 29
 	public class OutWindow
 	{
-		// Token: 0x060000A8 RID: 168 RVA: 0x000062B6 File Offset: 0x000044B6
 		public void Create(uint windowSize)
 		{
 			if (this._windowSize != windowSize)
@@ -18,7 +16,6 @@ namespace SevenZip.Compression.LZ
 			this._streamPos = 0U;
 		}
 
-		// Token: 0x060000A9 RID: 169 RVA: 0x000062E2 File Offset: 0x000044E2
 		public void Init(Stream stream, bool solid)
 		{
 			this.ReleaseStream();
@@ -31,7 +28,6 @@ namespace SevenZip.Compression.LZ
 			}
 		}
 
-		// Token: 0x060000AA RID: 170 RVA: 0x0000630C File Offset: 0x0000450C
 		public bool Train(Stream stream)
 		{
 			long length = stream.Length;
@@ -62,14 +58,12 @@ namespace SevenZip.Compression.LZ
 			return true;
 		}
 
-		// Token: 0x060000AB RID: 171 RVA: 0x000063CD File Offset: 0x000045CD
 		public void ReleaseStream()
 		{
 			this.Flush();
 			this._stream = null;
 		}
 
-		// Token: 0x060000AC RID: 172 RVA: 0x000063DC File Offset: 0x000045DC
 		public void Flush()
 		{
 			uint num = this._pos - this._streamPos;
@@ -85,7 +79,6 @@ namespace SevenZip.Compression.LZ
 			this._streamPos = this._pos;
 		}
 
-		// Token: 0x060000AD RID: 173 RVA: 0x00006434 File Offset: 0x00004634
 		public void CopyBlock(uint distance, uint len)
 		{
 			uint num = this._pos - distance - 1U;
@@ -111,7 +104,6 @@ namespace SevenZip.Compression.LZ
 			}
 		}
 
-		// Token: 0x060000AE RID: 174 RVA: 0x000064AC File Offset: 0x000046AC
 		public void PutByte(byte b)
 		{
 			byte[] buffer = this._buffer;
@@ -124,7 +116,6 @@ namespace SevenZip.Compression.LZ
 			}
 		}
 
-		// Token: 0x060000AF RID: 175 RVA: 0x000064E8 File Offset: 0x000046E8
 		public byte GetByte(uint distance)
 		{
 			uint num = this._pos - distance - 1U;
@@ -135,22 +126,16 @@ namespace SevenZip.Compression.LZ
 			return this._buffer[(int)num];
 		}
 
-		// Token: 0x0400008F RID: 143
 		private byte[] _buffer;
 
-		// Token: 0x04000090 RID: 144
 		private uint _pos;
 
-		// Token: 0x04000091 RID: 145
 		private uint _windowSize;
 
-		// Token: 0x04000092 RID: 146
 		private uint _streamPos;
 
-		// Token: 0x04000093 RID: 147
 		private Stream _stream;
 
-		// Token: 0x04000094 RID: 148
 		public uint TrainSize;
 	}
 }

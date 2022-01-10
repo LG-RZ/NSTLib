@@ -5,10 +5,8 @@ using SevenZip.Compression.RangeCoder;
 
 namespace SevenZip.Compression.LZMA
 {
-	// Token: 0x02000020 RID: 32
 	public class Encoder : ICoder, ISetCoderProperties, IWriteCoderProperties
 	{
-		// Token: 0x060000BB RID: 187 RVA: 0x00006BC8 File Offset: 0x00004DC8
 		static Encoder()
 		{
 			int num = 2;
@@ -27,7 +25,6 @@ namespace SevenZip.Compression.LZMA
 			}
 		}
 
-		// Token: 0x060000BC RID: 188 RVA: 0x00006C42 File Offset: 0x00004E42
 		private static uint GetPosSlot(uint pos)
 		{
 			if (pos < 2048U)
@@ -41,7 +38,6 @@ namespace SevenZip.Compression.LZMA
 			return (uint)(Encoder.g_FastPos[(int)(pos >> 20)] + 40);
 		}
 
-		// Token: 0x060000BD RID: 189 RVA: 0x00006C77 File Offset: 0x00004E77
 		private static uint GetPosSlot2(uint pos)
 		{
 			if (pos < 131072U)
@@ -55,7 +51,6 @@ namespace SevenZip.Compression.LZMA
 			return (uint)(Encoder.g_FastPos[(int)(pos >> 26)] + 52);
 		}
 
-		// Token: 0x060000BE RID: 190 RVA: 0x00006CB4 File Offset: 0x00004EB4
 		private void BaseInit()
 		{
 			this._state.Init();
@@ -66,7 +61,6 @@ namespace SevenZip.Compression.LZMA
 			}
 		}
 
-		// Token: 0x060000BF RID: 191 RVA: 0x00006CE8 File Offset: 0x00004EE8
 		private void Create()
 		{
 			if (this._matchFinder == null)
@@ -90,7 +84,6 @@ namespace SevenZip.Compression.LZMA
 			this._numFastBytesPrev = this._numFastBytes;
 		}
 
-		// Token: 0x060000C0 RID: 192 RVA: 0x00006D8C File Offset: 0x00004F8C
 		public Encoder()
 		{
 			int num = 0;
@@ -107,13 +100,11 @@ namespace SevenZip.Compression.LZMA
 			}
 		}
 
-		// Token: 0x060000C1 RID: 193 RVA: 0x00006F55 File Offset: 0x00005155
 		private void SetWriteEndMarkerMode(bool writeEndMarker)
 		{
 			this._writeEndMark = writeEndMarker;
 		}
 
-		// Token: 0x060000C2 RID: 194 RVA: 0x00006F60 File Offset: 0x00005160
 		private void Init()
 		{
 			this.BaseInit();
@@ -149,7 +140,6 @@ namespace SevenZip.Compression.LZMA
 			this._additionalOffset = 0U;
 		}
 
-		// Token: 0x060000C3 RID: 195 RVA: 0x000070A8 File Offset: 0x000052A8
 		private void ReadMatchDistances(out uint lenRes, out uint numDistancePairs)
 		{
 			lenRes = 0U;
@@ -165,7 +155,6 @@ namespace SevenZip.Compression.LZMA
 			this._additionalOffset += 1U;
 		}
 
-		// Token: 0x060000C4 RID: 196 RVA: 0x0000711C File Offset: 0x0000531C
 		private void MovePos(uint num)
 		{
 			if (num > 0U)
@@ -175,13 +164,11 @@ namespace SevenZip.Compression.LZMA
 			}
 		}
 
-		// Token: 0x060000C5 RID: 197 RVA: 0x0000713C File Offset: 0x0000533C
 		private uint GetRepLen1Price(Base.State state, uint posState)
 		{
 			return this._isRepG0[(int)state.Index].GetPrice0() + this._isRep0Long[(int)((state.Index << 4) + posState)].GetPrice0();
 		}
 
-		// Token: 0x060000C6 RID: 198 RVA: 0x00007170 File Offset: 0x00005370
 		private uint GetPureRepPrice(uint repIndex, Base.State state, uint posState)
 		{
 			uint num;
@@ -206,13 +193,11 @@ namespace SevenZip.Compression.LZMA
 			return num;
 		}
 
-		// Token: 0x060000C7 RID: 199 RVA: 0x00007222 File Offset: 0x00005422
 		private uint GetRepPrice(uint repIndex, uint len, Base.State state, uint posState)
 		{
 			return this._repMatchLenEncoder.GetPrice(len - 2U, posState) + this.GetPureRepPrice(repIndex, state, posState);
 		}
 
-		// Token: 0x060000C8 RID: 200 RVA: 0x00007240 File Offset: 0x00005440
 		private uint GetPosLenPrice(uint pos, uint len, uint posState)
 		{
 			uint lenToPosState = Base.GetLenToPosState(len);
@@ -228,7 +213,6 @@ namespace SevenZip.Compression.LZMA
 			return num + this._lenEncoder.GetPrice(len - 2U, posState);
 		}
 
-		// Token: 0x060000C9 RID: 201 RVA: 0x000072A0 File Offset: 0x000054A0
 		private uint Backward(out uint backRes, uint cur)
 		{
 			this._optimumEndIndex = cur;
@@ -261,7 +245,6 @@ namespace SevenZip.Compression.LZMA
 			return this._optimumCurrentIndex;
 		}
 
-		// Token: 0x060000CA RID: 202 RVA: 0x000073C4 File Offset: 0x000055C4
 		private uint GetOptimum(uint position, out uint backRes)
 		{
 			if (this._optimumEndIndex != this._optimumCurrentIndex)
@@ -748,13 +731,11 @@ namespace SevenZip.Compression.LZMA
 			return this.Backward(out backRes, num19);
 		}
 
-		// Token: 0x060000CB RID: 203 RVA: 0x000083BA File Offset: 0x000065BA
 		private bool ChangePair(uint smallDist, uint bigDist)
 		{
 			return smallDist < 33554432U && bigDist >= smallDist << 7;
 		}
 
-		// Token: 0x060000CC RID: 204 RVA: 0x000083D0 File Offset: 0x000065D0
 		private void WriteEndMarker(uint posState)
 		{
 			if (!this._writeEndMark)
@@ -775,7 +756,6 @@ namespace SevenZip.Compression.LZMA
 			this._posAlignEncoder.ReverseEncode(this._rangeEncoder, num3 & 15U);
 		}
 
-		// Token: 0x060000CD RID: 205 RVA: 0x000084A7 File Offset: 0x000066A7
 		private void Flush(uint nowPos)
 		{
 			this.ReleaseMFStream();
@@ -784,7 +764,6 @@ namespace SevenZip.Compression.LZMA
 			this._rangeEncoder.FlushStream();
 		}
 
-		// Token: 0x060000CE RID: 206 RVA: 0x000084D4 File Offset: 0x000066D4
 		public void CodeOneBlock(out long inSize, out long outSize, out bool finished)
 		{
 			inSize = 0L;
@@ -970,7 +949,6 @@ namespace SevenZip.Compression.LZMA
 			finished = false;
 		}
 
-		// Token: 0x060000CF RID: 207 RVA: 0x00008ACE File Offset: 0x00006CCE
 		private void ReleaseMFStream()
 		{
 			if (this._matchFinder != null && this._needReleaseMFStream)
@@ -980,26 +958,22 @@ namespace SevenZip.Compression.LZMA
 			}
 		}
 
-		// Token: 0x060000D0 RID: 208 RVA: 0x00008AF2 File Offset: 0x00006CF2
 		private void SetOutStream(Stream outStream)
 		{
 			this._rangeEncoder.SetStream(outStream);
 		}
 
-		// Token: 0x060000D1 RID: 209 RVA: 0x00008B00 File Offset: 0x00006D00
 		private void ReleaseOutStream()
 		{
 			this._rangeEncoder.ReleaseStream();
 		}
 
-		// Token: 0x060000D2 RID: 210 RVA: 0x00008B0D File Offset: 0x00006D0D
 		private void ReleaseStreams()
 		{
 			this.ReleaseMFStream();
 			this.ReleaseOutStream();
 		}
 
-		// Token: 0x060000D3 RID: 211 RVA: 0x00008B1C File Offset: 0x00006D1C
 		private void SetStreams(Stream inStream, Stream outStream, long inSize, long outSize)
 		{
 			this._inStream = inStream;
@@ -1016,7 +990,6 @@ namespace SevenZip.Compression.LZMA
 			this.nowPos64 = 0L;
 		}
 
-		// Token: 0x060000D4 RID: 212 RVA: 0x00008BB4 File Offset: 0x00006DB4
 		public void Code(Stream inStream, Stream outStream, long inSize, long outSize, ICodeProgress progress)
 		{
 			this._needReleaseMFStream = false;
@@ -1045,7 +1018,6 @@ namespace SevenZip.Compression.LZMA
 			}
 		}
 
-		// Token: 0x060000D5 RID: 213 RVA: 0x00008C0C File Offset: 0x00006E0C
 		public void WriteCoderProperties(Stream outStream)
 		{
 			this.properties[0] = (byte)((this._posStateBits * 5 + this._numLiteralPosStateBits) * 9 + this._numLiteralContextBits);
@@ -1056,7 +1028,6 @@ namespace SevenZip.Compression.LZMA
 			outStream.Write(this.properties, 0, 5);
 		}
 
-		// Token: 0x060000D6 RID: 214 RVA: 0x00008C74 File Offset: 0x00006E74
 		private void FillDistancesPrices()
 		{
 			for (uint num = 4U; num < 128U; num += 1U)
@@ -1093,7 +1064,6 @@ namespace SevenZip.Compression.LZMA
 			this._matchPriceCount = 0U;
 		}
 
-		// Token: 0x060000D7 RID: 215 RVA: 0x00008DC0 File Offset: 0x00006FC0
 		private void FillAlignPrices()
 		{
 			for (uint num = 0U; num < 16U; num += 1U)
@@ -1103,7 +1073,6 @@ namespace SevenZip.Compression.LZMA
 			this._alignPriceCount = 0U;
 		}
 
-		// Token: 0x060000D8 RID: 216 RVA: 0x00008DF8 File Offset: 0x00006FF8
 		private static int FindMatchFinder(string s)
 		{
 			for (int i = 0; i < Encoder.kMatchFinderIDs.Length; i++)
@@ -1116,7 +1085,6 @@ namespace SevenZip.Compression.LZMA
 			return -1;
 		}
 
-		// Token: 0x060000D9 RID: 217 RVA: 0x00008E2C File Offset: 0x0000702C
 		public void SetCoderProperties(CoderPropID[] propIDs, object[] properties)
 		{
 			uint num = 0U;
@@ -1248,203 +1216,139 @@ namespace SevenZip.Compression.LZMA
 			}
 		}
 
-		// Token: 0x060000DA RID: 218 RVA: 0x0000906A File Offset: 0x0000726A
 		public void SetTrainSize(uint trainSize)
 		{
 			this._trainSize = trainSize;
 		}
 
-		// Token: 0x040000C2 RID: 194
 		private const uint kIfinityPrice = 268435455U;
 
-		// Token: 0x040000C3 RID: 195
 		private static byte[] g_FastPos = new byte[2048];
 
-		// Token: 0x040000C4 RID: 196
 		private Base.State _state;
 
-		// Token: 0x040000C5 RID: 197
 		private byte _previousByte;
 
-		// Token: 0x040000C6 RID: 198
 		private uint[] _repDistances = new uint[4];
 
-		// Token: 0x040000C7 RID: 199
 		private const int kDefaultDictionaryLogSize = 22;
 
-		// Token: 0x040000C8 RID: 200
 		private const uint kNumFastBytesDefault = 32U;
 
-		// Token: 0x040000C9 RID: 201
 		private const uint kNumLenSpecSymbols = 16U;
 
-		// Token: 0x040000CA RID: 202
 		private const uint kNumOpts = 4096U;
 
-		// Token: 0x040000CB RID: 203
 		private Encoder.Optimal[] _optimum = new Encoder.Optimal[4096];
 
-		// Token: 0x040000CC RID: 204
 		private IMatchFinder _matchFinder;
 
-		// Token: 0x040000CD RID: 205
 		private SevenZip.Compression.RangeCoder.Encoder _rangeEncoder = new SevenZip.Compression.RangeCoder.Encoder();
 
-		// Token: 0x040000CE RID: 206
 		private BitEncoder[] _isMatch = new BitEncoder[192];
 
-		// Token: 0x040000CF RID: 207
 		private BitEncoder[] _isRep = new BitEncoder[12];
 
-		// Token: 0x040000D0 RID: 208
 		private BitEncoder[] _isRepG0 = new BitEncoder[12];
 
-		// Token: 0x040000D1 RID: 209
 		private BitEncoder[] _isRepG1 = new BitEncoder[12];
 
-		// Token: 0x040000D2 RID: 210
 		private BitEncoder[] _isRepG2 = new BitEncoder[12];
 
-		// Token: 0x040000D3 RID: 211
 		private BitEncoder[] _isRep0Long = new BitEncoder[192];
 
-		// Token: 0x040000D4 RID: 212
 		private BitTreeEncoder[] _posSlotEncoder = new BitTreeEncoder[4];
 
-		// Token: 0x040000D5 RID: 213
 		private BitEncoder[] _posEncoders = new BitEncoder[114];
 
-		// Token: 0x040000D6 RID: 214
 		private BitTreeEncoder _posAlignEncoder = new BitTreeEncoder(4);
 
-		// Token: 0x040000D7 RID: 215
 		private Encoder.LenPriceTableEncoder _lenEncoder = new Encoder.LenPriceTableEncoder();
 
-		// Token: 0x040000D8 RID: 216
 		private Encoder.LenPriceTableEncoder _repMatchLenEncoder = new Encoder.LenPriceTableEncoder();
 
-		// Token: 0x040000D9 RID: 217
 		private Encoder.LiteralEncoder _literalEncoder = new Encoder.LiteralEncoder();
 
-		// Token: 0x040000DA RID: 218
 		private uint[] _matchDistances = new uint[548];
 
-		// Token: 0x040000DB RID: 219
 		private uint _numFastBytes = 32U;
 
-		// Token: 0x040000DC RID: 220
 		private uint _longestMatchLength;
 
-		// Token: 0x040000DD RID: 221
 		private uint _numDistancePairs;
 
-		// Token: 0x040000DE RID: 222
 		private uint _additionalOffset;
 
-		// Token: 0x040000DF RID: 223
 		private uint _optimumEndIndex;
 
-		// Token: 0x040000E0 RID: 224
 		private uint _optimumCurrentIndex;
 
-		// Token: 0x040000E1 RID: 225
 		private bool _longestMatchWasFound;
 
-		// Token: 0x040000E2 RID: 226
 		private uint[] _posSlotPrices = new uint[256];
 
-		// Token: 0x040000E3 RID: 227
 		private uint[] _distancesPrices = new uint[512];
 
-		// Token: 0x040000E4 RID: 228
 		private uint[] _alignPrices = new uint[16];
 
-		// Token: 0x040000E5 RID: 229
 		private uint _alignPriceCount;
 
-		// Token: 0x040000E6 RID: 230
 		private uint _distTableSize = 44U;
 
-		// Token: 0x040000E7 RID: 231
 		private int _posStateBits = 2;
 
-		// Token: 0x040000E8 RID: 232
 		private uint _posStateMask = 3U;
 
-		// Token: 0x040000E9 RID: 233
 		private int _numLiteralPosStateBits;
 
-		// Token: 0x040000EA RID: 234
 		private int _numLiteralContextBits = 3;
 
-		// Token: 0x040000EB RID: 235
 		private uint _dictionarySize = 4194304U;
 
-		// Token: 0x040000EC RID: 236
 		private uint _dictionarySizePrev = uint.MaxValue;
 
-		// Token: 0x040000ED RID: 237
 		private uint _numFastBytesPrev = uint.MaxValue;
 
-		// Token: 0x040000EE RID: 238
 		private long nowPos64;
 
-		// Token: 0x040000EF RID: 239
 		private bool _finished;
 
-		// Token: 0x040000F0 RID: 240
 		private Stream _inStream;
 
-		// Token: 0x040000F1 RID: 241
 		private Encoder.EMatchFinderType _matchFinderType = Encoder.EMatchFinderType.BT4;
 
-		// Token: 0x040000F2 RID: 242
 		private bool _writeEndMark;
 
-		// Token: 0x040000F3 RID: 243
 		private bool _needReleaseMFStream;
 
-		// Token: 0x040000F4 RID: 244
 		private uint[] reps = new uint[4];
 
-		// Token: 0x040000F5 RID: 245
 		private uint[] repLens = new uint[4];
 
-		// Token: 0x040000F6 RID: 246
 		private const int kPropSize = 5;
 
-		// Token: 0x040000F7 RID: 247
 		private byte[] properties = new byte[5];
 
-		// Token: 0x040000F8 RID: 248
 		private uint[] tempPrices = new uint[128];
 
-		// Token: 0x040000F9 RID: 249
 		private uint _matchPriceCount;
 
-		// Token: 0x040000FA RID: 250
 		private static string[] kMatchFinderIDs = new string[]
 		{
 			"BT2",
 			"BT4"
 		};
 
-		// Token: 0x040000FB RID: 251
 		private uint _trainSize;
 
-		// Token: 0x0200002C RID: 44
 		private enum EMatchFinderType
 		{
-			// Token: 0x0400012E RID: 302
 			BT2,
-			// Token: 0x0400012F RID: 303
 			BT4
 		}
 
-		// Token: 0x0200002D RID: 45
 		private class LiteralEncoder
 		{
-			// Token: 0x06000108 RID: 264 RVA: 0x00009A20 File Offset: 0x00007C20
 			public void Create(int numPosBits, int numPrevBits)
 			{
 				if (this.m_Coders != null && this.m_NumPrevBits == numPrevBits && this.m_NumPosBits == numPosBits)
@@ -1462,7 +1366,6 @@ namespace SevenZip.Compression.LZMA
 				}
 			}
 
-			// Token: 0x06000109 RID: 265 RVA: 0x00009AA0 File Offset: 0x00007CA0
 			public void Init()
 			{
 				uint num = 1U << this.m_NumPrevBits + this.m_NumPosBits;
@@ -1472,34 +1375,26 @@ namespace SevenZip.Compression.LZMA
 				}
 			}
 
-			// Token: 0x0600010A RID: 266 RVA: 0x00009ADD File Offset: 0x00007CDD
 			public Encoder.LiteralEncoder.Encoder2 GetSubCoder(uint pos, byte prevByte)
 			{
 				return this.m_Coders[(int)(((pos & this.m_PosMask) << this.m_NumPrevBits) + (uint)(prevByte >> 8 - this.m_NumPrevBits))];
 			}
 
-			// Token: 0x04000130 RID: 304
 			private Encoder.LiteralEncoder.Encoder2[] m_Coders;
 
-			// Token: 0x04000131 RID: 305
 			private int m_NumPrevBits;
 
-			// Token: 0x04000132 RID: 306
 			private int m_NumPosBits;
 
-			// Token: 0x04000133 RID: 307
 			private uint m_PosMask;
 
-			// Token: 0x02000032 RID: 50
 			public struct Encoder2
 			{
-				// Token: 0x0600011E RID: 286 RVA: 0x00009EDF File Offset: 0x000080DF
 				public void Create()
 				{
 					this.m_Encoders = new BitEncoder[768];
 				}
 
-				// Token: 0x0600011F RID: 287 RVA: 0x00009EF4 File Offset: 0x000080F4
 				public void Init()
 				{
 					for (int i = 0; i < 768; i++)
@@ -1508,7 +1403,6 @@ namespace SevenZip.Compression.LZMA
 					}
 				}
 
-				// Token: 0x06000120 RID: 288 RVA: 0x00009F24 File Offset: 0x00008124
 				public void Encode(SevenZip.Compression.RangeCoder.Encoder rangeEncoder, byte symbol)
 				{
 					uint num = 1U;
@@ -1520,7 +1414,6 @@ namespace SevenZip.Compression.LZMA
 					}
 				}
 
-				// Token: 0x06000121 RID: 289 RVA: 0x00009F64 File Offset: 0x00008164
 				public void EncodeMatched(SevenZip.Compression.RangeCoder.Encoder rangeEncoder, byte matchByte, byte symbol)
 				{
 					uint num = 1U;
@@ -1540,7 +1433,6 @@ namespace SevenZip.Compression.LZMA
 					}
 				}
 
-				// Token: 0x06000122 RID: 290 RVA: 0x00009FC8 File Offset: 0x000081C8
 				public uint GetPrice(bool matchMode, byte matchByte, byte symbol)
 				{
 					uint num = 0U;
@@ -1572,15 +1464,12 @@ namespace SevenZip.Compression.LZMA
 					return num;
 				}
 
-				// Token: 0x04000149 RID: 329
 				private BitEncoder[] m_Encoders;
 			}
 		}
 
-		// Token: 0x0200002E RID: 46
 		private class LenEncoder
 		{
-			// Token: 0x0600010C RID: 268 RVA: 0x00009B0C File Offset: 0x00007D0C
 			public LenEncoder()
 			{
 				for (uint num = 0U; num < 16U; num += 1U)
@@ -1590,7 +1479,6 @@ namespace SevenZip.Compression.LZMA
 				}
 			}
 
-			// Token: 0x0600010D RID: 269 RVA: 0x00009B78 File Offset: 0x00007D78
 			public void Init(uint numPosStates)
 			{
 				this._choice.Init();
@@ -1603,7 +1491,6 @@ namespace SevenZip.Compression.LZMA
 				this._highCoder.Init();
 			}
 
-			// Token: 0x0600010E RID: 270 RVA: 0x00009BD4 File Offset: 0x00007DD4
 			public void Encode(SevenZip.Compression.RangeCoder.Encoder rangeEncoder, uint symbol, uint posState)
 			{
 				if (symbol < 8U)
@@ -1624,7 +1511,6 @@ namespace SevenZip.Compression.LZMA
 				this._highCoder.Encode(rangeEncoder, symbol - 8U);
 			}
 
-			// Token: 0x0600010F RID: 271 RVA: 0x00009C5C File Offset: 0x00007E5C
 			public void SetPrices(uint posState, uint numSymbols, uint[] prices, uint st)
 			{
 				uint price = this._choice.GetPrice0();
@@ -1656,45 +1542,35 @@ namespace SevenZip.Compression.LZMA
 				}
 			}
 
-			// Token: 0x04000134 RID: 308
 			private BitEncoder _choice;
 
-			// Token: 0x04000135 RID: 309
 			private BitEncoder _choice2;
 
-			// Token: 0x04000136 RID: 310
 			private BitTreeEncoder[] _lowCoder = new BitTreeEncoder[16];
 
-			// Token: 0x04000137 RID: 311
 			private BitTreeEncoder[] _midCoder = new BitTreeEncoder[16];
 
-			// Token: 0x04000138 RID: 312
 			private BitTreeEncoder _highCoder = new BitTreeEncoder(8);
 		}
 
-		// Token: 0x0200002F RID: 47
 		private class LenPriceTableEncoder : Encoder.LenEncoder
 		{
-			// Token: 0x06000110 RID: 272 RVA: 0x00009D16 File Offset: 0x00007F16
 			public void SetTableSize(uint tableSize)
 			{
 				this._tableSize = tableSize;
 			}
 
-			// Token: 0x06000111 RID: 273 RVA: 0x00009D1F File Offset: 0x00007F1F
 			public uint GetPrice(uint symbol, uint posState)
 			{
 				return this._prices[(int)(posState * 272U + symbol)];
 			}
 
-			// Token: 0x06000112 RID: 274 RVA: 0x00009D31 File Offset: 0x00007F31
 			private void UpdateTable(uint posState)
 			{
 				base.SetPrices(posState, this._tableSize, this._prices, posState * 272U);
 				this._counters[(int)posState] = this._tableSize;
 			}
 
-			// Token: 0x06000113 RID: 275 RVA: 0x00009D5C File Offset: 0x00007F5C
 			public void UpdateTables(uint numPosStates)
 			{
 				for (uint num = 0U; num < numPosStates; num += 1U)
@@ -1703,7 +1579,6 @@ namespace SevenZip.Compression.LZMA
 				}
 			}
 
-			// Token: 0x06000114 RID: 276 RVA: 0x00009D7C File Offset: 0x00007F7C
 			public new void Encode(SevenZip.Compression.RangeCoder.Encoder rangeEncoder, uint symbol, uint posState)
 			{
 				base.Encode(rangeEncoder, symbol, posState);
@@ -1716,73 +1591,54 @@ namespace SevenZip.Compression.LZMA
 				}
 			}
 
-			// Token: 0x04000139 RID: 313
 			private uint[] _prices = new uint[4352];
 
-			// Token: 0x0400013A RID: 314
 			private uint _tableSize;
 
-			// Token: 0x0400013B RID: 315
 			private uint[] _counters = new uint[16];
 		}
 
-		// Token: 0x02000030 RID: 48
 		private class Optimal
 		{
-			// Token: 0x06000116 RID: 278 RVA: 0x00009DD4 File Offset: 0x00007FD4
 			public void MakeAsChar()
 			{
 				this.BackPrev = uint.MaxValue;
 				this.Prev1IsChar = false;
 			}
 
-			// Token: 0x06000117 RID: 279 RVA: 0x00009DE4 File Offset: 0x00007FE4
 			public void MakeAsShortRep()
 			{
 				this.BackPrev = 0U;
 				this.Prev1IsChar = false;
 			}
 
-			// Token: 0x06000118 RID: 280 RVA: 0x00009DF4 File Offset: 0x00007FF4
 			public bool IsShortRep()
 			{
 				return this.BackPrev == 0U;
 			}
 
-			// Token: 0x0400013C RID: 316
 			public Base.State State;
 
-			// Token: 0x0400013D RID: 317
 			public bool Prev1IsChar;
 
-			// Token: 0x0400013E RID: 318
 			public bool Prev2;
 
-			// Token: 0x0400013F RID: 319
 			public uint PosPrev2;
 
-			// Token: 0x04000140 RID: 320
 			public uint BackPrev2;
 
-			// Token: 0x04000141 RID: 321
 			public uint Price;
 
-			// Token: 0x04000142 RID: 322
 			public uint PosPrev;
 
-			// Token: 0x04000143 RID: 323
 			public uint BackPrev;
 
-			// Token: 0x04000144 RID: 324
 			public uint Backs0;
 
-			// Token: 0x04000145 RID: 325
 			public uint Backs1;
 
-			// Token: 0x04000146 RID: 326
 			public uint Backs2;
 
-			// Token: 0x04000147 RID: 327
 			public uint Backs3;
 		}
 	}
