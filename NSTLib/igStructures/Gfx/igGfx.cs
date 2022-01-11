@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace NSTLib.igStructures.Core.Gfx
+namespace NSTLib.igStructures.Gfx
 {
 	public enum IG_GFX_DEPTH_TEST_FUNCTION
 	{

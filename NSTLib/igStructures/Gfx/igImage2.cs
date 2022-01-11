@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace NSTLib.igStructures.Core.Gfx
+namespace NSTLib.igStructures.Gfx
 {
     public class igImage2 : igObject
     {
