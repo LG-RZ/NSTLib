@@ -42,12 +42,12 @@ namespace NSTLib.igStructures.Core
 
         #endregion
 
-        public static igObject getObject(ExtendedBinaryReader reader, IGZ container)
+        public static igObject getObject(ExtendedBinaryReader reader, IGZ container, bool readFields = true)
         {
             if (container.findObject((uint)reader.Position, out igObject @object))
                 return @object;
             else
-                return read(reader, container);
+                return readFields ? read(reader, container) : readWithoutFields(reader, container);
         }
 
         public static igObject read(ExtendedBinaryReader reader, IGZ container, string name = null)
@@ -85,16 +85,19 @@ namespace NSTLib.igStructures.Core
 
         public virtual void readFields(ExtendedBinaryReader reader)
         {
+            baseReadFields(reader);
+        }
+
+        public void baseReadFields(ExtendedBinaryReader reader)
+        {
             long Position = reader.Position;
 
-            foreach(var field in GetType().GetAllFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance))
+            foreach (var field in GetType().GetAllFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance))
             {
                 foreach (var attribute in field.GetCustomAttributes(false))
                 {
-                    if (attribute is igFieldAttribute)
+                    if (attribute is igFieldAttribute fieldAttribute)
                     {
-                        igFieldAttribute fieldAttribute = (igFieldAttribute)attribute;
-
                         igMetaField metaField = (igMetaField)Activator.CreateInstance(fieldAttribute.MetaFieldType);
                         metaField._container = _container;
                         metaField._offset = (uint)(Position + fieldAttribute.FieldOffset);
@@ -102,7 +105,8 @@ namespace NSTLib.igStructures.Core
                         reader.Position = metaField._offset;
                         metaField.readFields(reader);
                         reader.Position = metaField._offset;
-                        field.SetValue(this, metaField.readField(reader));
+                        object val = metaField.readField(reader);
+                        field.SetValue(this, val);
 
                         break;
                     }

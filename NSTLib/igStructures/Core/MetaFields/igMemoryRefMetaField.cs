@@ -9,7 +9,7 @@ namespace NSTLib.igStructures.Core.MetaFields
     public class igMemoryRefMetaField : igMetaField
     {
         [igField(0, typeof(igIntMetaField))]
-        private int _memSize;
+        protected int _memSize;
         [igField(7, typeof(igBooleanMetaField))]
         private bool _active;
         [igField(8, typeof(igLongMetaField))]

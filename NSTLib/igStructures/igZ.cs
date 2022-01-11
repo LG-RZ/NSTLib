@@ -87,12 +87,8 @@ namespace NSTLib.igStructures
                 }
 
                 reader.Position = 0;
-                igz._objects = (igObjectList)igObject.read(reader, igz);
-
-                for(int i = 0; i < igz._objects.Items.Count; i++)
-                {
-                    igz._objects.Items[i]._metaName = igz._names.Items[i]._name;
-                }
+                igz._objects = igObjectList.readObjectsWithoutFields(reader, igz, igz._names);
+                igz._objects.readFieldsOfObjects(reader);
 
                 #endregion
             }

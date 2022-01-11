@@ -267,7 +267,7 @@ namespace NSTLib.igStructures
 
                 Decoder decoder = new Decoder();
                 decoder.SetDecoderProperties(DecoderProperties);
-                decoder.Code(reader.BaseStream, writer.BaseStream, CompressedSize, Math.Min(0x8000, size - (0x8000 * index)), null);
+                decoder.Code(reader.BaseStream, writer.BaseStream, CompressedSize, System.Math.Min(0x8000, size - (0x8000 * index)), null);
             }
         }
 
