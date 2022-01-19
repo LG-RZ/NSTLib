@@ -8,6 +8,8 @@ namespace NSTLib.igStructures.Gfx
 {
     public class igImage2 : igObject
     {
+        [igField(0, typeof(igStringMetaField))]
+        public string _imageName;
         [igField(8, typeof(igShortMetaField))]
         public short _width;
         [igField(10, typeof(igShortMetaField))]

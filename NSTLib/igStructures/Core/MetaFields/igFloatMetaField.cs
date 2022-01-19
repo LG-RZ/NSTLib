@@ -6,16 +6,16 @@ using System.Threading.Tasks;
 
 namespace NSTLib.igStructures.Core.MetaFields
 {
-    public class igStringMetaField : igMetaField
+    public class igFloatMetaField : igMetaField
     {
         public override object readField(ExtendedBinaryReader reader)
         {
-            return _container._stringsList[reader.ReadInt32()];
+            return reader.ReadSingle();
         }
 
         public override void writeField(object @object, BinaryWriter writer)
         {
-            writer.Write(_container._stringsList.IndexOf((string)@object));
+            writer.Write((float)@object);
         }
     }
 }

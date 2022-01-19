@@ -14,12 +14,17 @@ namespace NSTLib.igStructures.Core.MetaFields
         [igField(4, typeof(igIntMetaField))]
         public int _unknown;
         [igField(8, typeof(igLongMetaField))]
-        public long _offset;
+        public long _dataOffset;
 
         public override object readField(ExtendedBinaryReader reader)
         {
-            byte[] buffer = new byte[_size];
-            Buffer.BlockCopy(_container._data, (int)(_offset & ~0x8000000), buffer, 0, buffer.Length);
+            long RelativePosition = reader.RelativePosition;
+
+            reader.RelativePosition = _container._dataOffset;
+            reader.Position = _dataOffset & 0x7ffffff;
+            byte[] buffer = reader.ReadBytes(_size);
+
+            reader.RelativePosition = RelativePosition;
             return buffer;
         }
     }

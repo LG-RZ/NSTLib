@@ -13,6 +13,7 @@ namespace NSTLib.igStructures.Core.MetaFields
         public override object readField(ExtendedBinaryReader reader)
         {
             T @object = new T();
+            @object._memoryPoolIndex = _memoryPoolIndex;
             @object._container = _container;
             @object.readFields(reader);
             return @object;

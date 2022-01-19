@@ -42,28 +42,28 @@ namespace NSTLib.igStructures.Core
 
         #endregion
 
-        public static igObject getObject(ExtendedBinaryReader reader, IGZ container, bool readFields = true)
+        public static igObject getObject(ExtendedBinaryReader reader, IGZ container, int memoryPoolIndex, bool readFields = true)
         {
-            if (container.findObject((uint)reader.Position, out igObject @object))
+            if (container.findObject((uint)reader.Position, memoryPoolIndex, out igObject @object))
                 return @object;
             else
-                return readFields ? read(reader, container) : readWithoutFields(reader, container);
+                return readFields ? read(reader, container, memoryPoolIndex) : readWithoutFields(reader, container, memoryPoolIndex);
         }
 
-        public static igObject read(ExtendedBinaryReader reader, IGZ container, string name = null)
+        public static igObject read(ExtendedBinaryReader reader, IGZ container, int memoryPoolIndex, string name = null)
         {
-            igObject @object = readWithoutFields(reader, container, name);
+            igObject @object = readWithoutFields(reader, container, memoryPoolIndex, name);
             @object.readFields(reader);
             return @object;
         }
 
-        public static igObject readWithoutFields(ExtendedBinaryReader reader, IGZ container, string name = null)
+        public static igObject readWithoutFields(ExtendedBinaryReader reader, IGZ container, int memoryPoolIndex, string name = null)
         {
             if (!_init)
                 initialize();
 
             int TypeIndex = (int)reader.ReadInt64();
-            int MemoryPoolIndex = (int)reader.ReadInt64();
+            int Unknown = (int)reader.ReadInt64();
 
             igObject @object = new igObject();
             if(types.TryGetValue(container._typeNames[TypeIndex], out Type value))
@@ -78,7 +78,7 @@ namespace NSTLib.igStructures.Core
 
             @object._offset = (uint)reader.Position - 16;
             @object._typeIndex = TypeIndex;
-            @object._memoryPoolIndex = MemoryPoolIndex;
+            @object._memoryPoolIndex = memoryPoolIndex;
 
             return @object;
         }
@@ -99,6 +99,7 @@ namespace NSTLib.igStructures.Core
                     if (attribute is igFieldAttribute fieldAttribute)
                     {
                         igMetaField metaField = (igMetaField)Activator.CreateInstance(fieldAttribute.MetaFieldType);
+                        metaField._memoryPoolIndex = _memoryPoolIndex;
                         metaField._container = _container;
                         metaField._offset = (uint)(Position + fieldAttribute.FieldOffset);
 

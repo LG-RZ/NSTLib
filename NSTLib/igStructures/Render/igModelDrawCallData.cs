@@ -8,8 +8,8 @@
         public igVec3f _min;
         [igField(32, typeof(igVec3fMetaField))]
         public igVec3f _max;
-        [igField(48, typeof(igHandleMetaField))]
-        public igHandle _materialHandle;
+        [igField(48, typeof(igHandleNameMetaField))]
+        public Tuple<string, string> _materialHandle;
         [igField(56, typeof(igObjectMetaField))]
         public igGraphicsVertexBuffer _graphicsVertexBuffer;
         [igField(64, typeof(igObjectMetaField))]

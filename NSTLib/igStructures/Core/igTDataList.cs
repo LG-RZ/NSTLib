@@ -50,10 +50,28 @@ namespace NSTLib.igStructures.Core
                 {
                     if (offsets[i] != 0)
                     {
-                        reader.Position = offsets[i];
-                        var @object = getObject(reader, _container);
-                        if (@object is T)
-                            Items.Add((T)(object)@object);
+                        if ((offsets[i] & 0x8000000) != 0)
+                        {
+                            bool isLastPool = _container._memoryPools.Count <= (_memoryPoolIndex + 1);
+                            long PositionRelative = reader.RelativePosition;
+                            uint Offset = (uint)(offsets[i] & 0x7ffffff);
+
+                            reader.RelativePosition = _container._memoryPools[isLastPool ? _memoryPoolIndex : _memoryPoolIndex + 1].Item1;
+                            reader.Position = Offset;
+
+                            var @object = getObject(reader, _container, isLastPool ? _memoryPoolIndex : _memoryPoolIndex + 1);
+                            if (@object is T)
+                                Items.Add((T)(object)@object);
+
+                            reader.RelativePosition = PositionRelative;
+                        }
+                        else
+                        {
+                            reader.Position = offsets[i];
+                            var @object = getObject(reader, _container, _memoryPoolIndex);
+                            if (@object is T)
+                                Items.Add((T)(object)@object);
+                        }
                     }
                 }
             }

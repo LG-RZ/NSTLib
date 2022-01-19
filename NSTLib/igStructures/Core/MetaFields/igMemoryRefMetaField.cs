@@ -11,16 +11,35 @@ namespace NSTLib.igStructures.Core.MetaFields
         [igField(0, typeof(igIntMetaField))]
         protected int _memSize;
         [igField(7, typeof(igBooleanMetaField))]
-        private bool _active;
+        protected bool _active;
         [igField(8, typeof(igLongMetaField))]
-        private long _offset;
+        protected long _dataOffset;
 
         public override object readField(ExtendedBinaryReader reader)
         {
-            reader.Position = _offset;
-            byte[] buffer = new byte[_memSize];
-            reader.BaseStream.Read(buffer, 0, buffer.Length);
-            return buffer;
+            if((_dataOffset & 0x8000000) != 0)
+            {
+                bool isLastPool = _container._memoryPools.Count <= (_memoryPoolIndex + 1);
+                long PositionRelative = reader.RelativePosition;
+                uint Offset = (uint)(_dataOffset & 0x7ffffff);
+
+                reader.RelativePosition = _container._memoryPools[isLastPool ? _memoryPoolIndex : _memoryPoolIndex + 1].Item1;
+                reader.Position = Offset;
+
+                byte[] buffer = new byte[_memSize];
+                reader.BaseStream.Read(buffer, 0, buffer.Length);
+
+                reader.RelativePosition = PositionRelative;
+
+                return buffer;
+            }
+            else
+            {
+                reader.Position = _dataOffset;
+                byte[] buffer = new byte[_memSize];
+                reader.BaseStream.Read(buffer, 0, buffer.Length);
+                return buffer;
+            }
         }
     }
 }
