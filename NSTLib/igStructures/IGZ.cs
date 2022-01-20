@@ -208,7 +208,7 @@ namespace NSTLib.igStructures
 
                     for (int i = 0; i < data.Length; i++)
                     {
-                        reader.BaseStream.Position = 0x28 + ((data[i] >> 0x1b) * 0x10);
+                        reader.BaseStream.Position = 0x28 + ((data[i] >> 0x1b) * 0x10);  // (int >> 0x1b) == objectLists Index
                         _stringFieldOffsets.Add(reader.ReadUInt32() + (data[i] & 0x7ffffff));
                     }
 
@@ -221,13 +221,26 @@ namespace NSTLib.igStructures
 
                     for (int i = 0; i < data.Length; i++)
                     {
-                        reader.BaseStream.Position = 0x28 + (((data[i] & 0xfbffffff) >> 0x1b) * 0x10);
+                        reader.BaseStream.Position = 0x28 + (((data[i] & 0xfbffffff) >> 0x1b) * 0x10); // (int >> 0x1b) == objectLists Index
                         uint Value1 = ((data[i] & 0xfbffffff) & 0x7ffffff) + reader.ReadUInt32();
                         _pointerFieldOffsets.Add(Value1);
                     }
 
                     break;
                 case 0x44495052: // RPID
+                    _memPoolIndexOffsets = new List<uint>();
+
+                    fixed (byte* buffer = reader.ReadBytes(section._length - section._headerSize))
+                        data = ReadCompressedInts(this, section._count, buffer);
+
+                    for (int i = 0; i < data.Length; i++)
+                    {
+                        reader.BaseStream.Position = 0x28 + ((data[i] >> 0x1b) * 0x10); // (int >> 0x1b) == objectLists Index
+                        _memPoolIndexOffsets.Add(reader.ReadUInt32() + (data[i] & 0x7ffffff));
+                    }
+
+                    break;
+                case 0x54584552: // REXT
                     _externalFieldOffsets = new List<uint>();
 
                     fixed (byte* buffer = reader.ReadBytes(section._length - section._headerSize))
@@ -236,11 +249,11 @@ namespace NSTLib.igStructures
                     for (int i = 0; i < data.Length; i++)
                     {
                         reader.BaseStream.Position = 0x28 + ((data[i] >> 0x1b) * 0x10); // (int >> 0x1b) == objectLists Index
-                        _externalFieldOffsets.Add(reader.ReadUInt32() + (data[i] & 0x7ffffff)); // NOT SURE ABOUT THIS
+                        _externalFieldOffsets.Add(reader.ReadUInt32() + (data[i] & 0x7ffffff));
                     }
 
                     break;
-                case 0x54584552: // REXT
+                case 0x444E4852: // RHND
                     _handleFieldOffsets = new List<uint>();
 
                     fixed (byte* buffer = reader.ReadBytes(section._length - section._headerSize))
@@ -249,11 +262,11 @@ namespace NSTLib.igStructures
                     for (int i = 0; i < data.Length; i++)
                     {
                         reader.BaseStream.Position = 0x28 + ((data[i] >> 0x1b) * 0x10); // (int >> 0x1b) == objectLists Index
-                        _handleFieldOffsets.Add(reader.ReadUInt32() + (data[i] & 0x7ffffff)); // NOT SURE ABOUT THIS
+                        _handleFieldOffsets.Add(reader.ReadUInt32() + (data[i] & 0x7ffffff));
                     }
 
                     break;
-                case 0x444E4852: // RHND
+                case 0x58454E52: // RNEX
                     _namedExternalFieldOffsets = new List<uint>();
 
                     fixed (byte* buffer = reader.ReadBytes(section._length - section._headerSize))
@@ -263,19 +276,6 @@ namespace NSTLib.igStructures
                     {
                         reader.BaseStream.Position = 0x28 + ((data[i] >> 0x1b) * 0x10); // (int >> 0x1b) == objectLists Index
                         _namedExternalFieldOffsets.Add(reader.ReadUInt32() + (data[i] & 0x7ffffff));
-                    }
-
-                    break;
-                case 0x58454E52: // RNEX
-                    _memPoolIndexOffsets = new List<uint>();
-
-                    fixed (byte* buffer = reader.ReadBytes(section._length - section._headerSize))
-                        data = ReadCompressedInts(this, section._count, buffer);
-
-                    for (int i = 0; i < data.Length; i++)
-                    {
-                        reader.BaseStream.Position = 0x28 + ((data[i] >> 0x1b) * 0x10); // (int >> 0x1b) == objectLists Index
-                        _memPoolIndexOffsets.Add(reader.ReadUInt32() + (data[i] & 0x7ffffff)); // NOT SURE ABOUT THIS
                     }
 
                     break;
@@ -432,10 +432,10 @@ namespace NSTLib.igStructures
         public List<uint> _typeOffsets;
         public List<uint> _stringFieldOffsets;
         public List<uint> _pointerFieldOffsets;
+        public List<uint> _memPoolIndexOffsets;
         public List<uint> _externalFieldOffsets;
         public List<uint> _handleFieldOffsets;
         public List<uint> _namedExternalFieldOffsets;
-        public List<uint> _memPoolIndexOffsets;
         public List<Tuple<uint, int>> _memoryPools;
         public uint _dataOffset;
 

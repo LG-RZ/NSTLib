@@ -6,6 +6,32 @@ using System.Threading.Tasks;
 
 namespace NSTLib.igStructures.Core.MetaFields
 {
+    public class igCharMetaField : igMetaField
+    {
+        public override object readField(ExtendedBinaryReader reader)
+        {
+            return reader.ReadSByte();
+        }
+
+        public override void writeField(object @object, BinaryWriter writer)
+        {
+            writer.Write((sbyte)@object);
+        }
+    }
+
+    public class igUnsignedCharMetaField : igMetaField
+    {
+        public override object readField(ExtendedBinaryReader reader)
+        {
+            return reader.ReadByte();
+        }
+
+        public override void writeField(object @object, BinaryWriter writer)
+        {
+            writer.Write((byte)@object);
+        }
+    }
+
     public class igShortMetaField : igMetaField
     {
         public override object readField(ExtendedBinaryReader reader)
